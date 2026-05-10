@@ -1,0 +1,52 @@
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Cache files
+embed_cache.json
+*.cache
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Pytest
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Temp files
+*.tmp
+tmp/
