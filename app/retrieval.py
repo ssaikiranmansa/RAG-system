@@ -6,6 +6,8 @@ import logging
 from google import genai
 from db import get_conn
 from ingest import embed
+from dotenv import load_dotenv
+load_dotenv(dotenv_path="../.env")
 
 logger = logging.getLogger(__name__)
 

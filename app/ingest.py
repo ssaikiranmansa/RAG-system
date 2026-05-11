@@ -5,7 +5,8 @@ import hashlib
 import logging
 from google import genai
 from db import get_conn, init_db
-
+from dotenv import load_dotenv
+load_dotenv(dotenv_path="../.env")
 
 logger = logging.getLogger(__name__)
 
