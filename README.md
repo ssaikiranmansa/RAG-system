@@ -1,3 +1,5 @@
+![CI](https://github.com/ssaikiranmansa/RAG-system/actions/workflows/ci.yml/badge.svg)
+
 # RAG API
 
 A production-ready Retrieval-Augmented Generation (RAG) system built with Gemini and pgvector. Ingests PDFs, extracts structured text page-by-page, chunks semantically, stores embeddings in Postgres, and answers questions grounded in the document with citations.
