@@ -244,9 +244,9 @@ def embed_batch(texts: list[str], batch_size: int = 20) -> list[list[float]]:
 
 # ── ingest ────────────────────────────────────────────────────────────────────
 
-def ingest(pdf_path: str):
+def ingest(pdf_path: str, original_name: str = None):
     init_db()
-    source = os.path.basename(pdf_path)
+    source = original_name if original_name else os.path.basename(pdf_path)
 
     logger.info("Starting ingestion for: %s", source)
 

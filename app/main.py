@@ -42,7 +42,7 @@ async def ingest_pdf(files: List[UploadFile] = File(...)):
 
         try:
             logger.info("Ingesting file: %s", file.filename)
-            result = ingest(tmp_path)
+            result = ingest(tmp_path, original_name=file.filename)
             results.append(result)
             logger.info("Ingested %s — %d chunks (skipped=%s)",
                         file.filename, result["chunks_ingested"], result.get("skipped"))

@@ -81,6 +81,10 @@ html, body, [class*="css"] {
 [data-testid="stFileUploader"]:hover {
     border-color: #a78bfa !important;
 }
+            
+[data-testid="stFileUploader"] small {
+    display: none !important;
+}
 
 /* ── buttons ── */
 .stButton > button {
@@ -323,11 +327,11 @@ with st.sidebar:
         st.markdown("<br>", unsafe_allow_html=True)
 
     # Settings
-    st.markdown('<div class="section-label">Retrieval Settings</div>', unsafe_allow_html=True)
-    top_k = st.slider("Top-K chunks", min_value=1, max_value=15, value=5,
-                      help="How many chunks to retrieve before reranking")
+    # st.markdown('<div class="section-label">Retrieval Settings</div>', unsafe_allow_html=True)
+    # top_k = st.slider("Top-K chunks", min_value=1, max_value=15, value=5,
+    #                   help="How many chunks to retrieve before reranking")
 
-    st.markdown('<hr class="thin-divider">', unsafe_allow_html=True)
+    # st.markdown('<hr class="thin-divider">', unsafe_allow_html=True)
 
     # Query history
     if st.session_state.query_history:
