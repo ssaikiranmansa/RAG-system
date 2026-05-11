@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: rag
+          POSTGRES_PASSWORD: rag
+          POSTGRES_DB: ragdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      GEMINI_API_KEY: dummy-key-for-tests
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ragdb
+      POSTGRES_USER: rag
+      POSTGRES_PASSWORD: rag
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest httpx
+
+      - name: Wait for Postgres to be ready
+        run: |
+          until pg_isready -h localhost -p 5432 -U rag; do
+            echo "Waiting for postgres..."
+            sleep 2
+          done
+
+      - name: Init DB schema
+        run: |
+          python -c "
+          import sys; sys.path.insert(0, 'app')
+          import os
+          os.environ['GEMINI_API_KEY'] = 'dummy'
+          from db import init_db
+          init_db()
+          "
+
+      - name: Run unit tests
+        run: pytest tests/test_unit.py -v
+
+      - name: Run DB tests
+        run: pytest tests/test_db.py -v
+
+      - name: Run integration tests
+        run: pytest tests/test_integration.py -v
+
+      - name: Full test summary
+        run: pytest tests/ -v --tb=short
