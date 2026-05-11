@@ -65,9 +65,15 @@ pip install -r requirements.txt
 
 ### 4. Configure environment
 
-```bash
-cp .env.example .env
-# Edit .env and add your GEMINI_API_KEY
+Create a `.env` file in the root directory with the following variables:
+
+```
+GEMINI_API_KEY=your_gemini_api_key_here
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=ragdb
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
 ```
 
 ### 5. Run the API
@@ -136,25 +142,20 @@ Response:
 
 ```
 .
+├── .github/
+│   └── workflows/
+│       └── ci.yml           # GitHub Actions CI pipeline
+├── app/
+│   ├── main.py              # FastAPI endpoints (/ingest, /query, /health)
+│   ├── ingest.py            # Extraction → chunking → embedding → storage
+│   ├── retrieval.py         # Query embedding → search → rerank → answer
+│   └── db.py                # Postgres connection + schema init
+├── tests/
+│   ├── conftest.py          # Shared fixtures and path setup
+│   ├── test_unit.py         # Unit tests (chunking, cache, dynamic top-k)
+│   ├── test_db.py           # DB tests (schema, insert, vector search)
+│   └── test_integration.py  # API endpoint tests
 ├── docker-compose.yml       # Postgres + pgvector
 ├── requirements.txt
-├── .env.example
-├── README.md
-└── app/
-    ├── main.py              # FastAPI endpoints (/ingest, /query, /health)
-    ├── ingest.py            # Extraction → chunking → embedding → storage
-    ├── retrieval.py         # Query embedding → search → rerank → answer
-    └── db.py                # Postgres connection + schema init
+└── README.md
 ```
-
-## Known Limitations & Next Steps
-
-| Limitation | Production Fix |
-|---|---|
-| Answer cache resets on restart | Redis with TTL |
-| Embedding cache is a flat JSON file | Move to DB or Redis |
-| No chunk deduplication beyond source filename | Hash chunk content before insert |
-| Citations are LLM-generated (soft) | Extract structured citations post-generation |
-| Single-tenant (all docs share one table) | Add `user_id` / `collection_id` column |
-| No auth on API endpoints | API key middleware or OAuth |
-| `embed_cache.json` not excluded from VCS | Covered in `.gitignore` |
