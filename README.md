@@ -54,7 +54,7 @@ Query → embed → dynamic top-k search → batch rerank → grounded answer
 ### 2. Start Postgres with pgvector
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ### 3. Install dependencies
@@ -85,6 +85,18 @@ uvicorn main:app --reload
 
 API is now live at `http://localhost:8000`. Interactive docs at `http://localhost:8000/docs`.
 
+### 6. Run the UI (optional)
+
+Open a **new terminal** and run:
+
+```bash
+python -m streamlit run app/ui.py
+```
+
+UI will open automatically at `http://localhost:8501`
+
+> Make sure uvicorn is already running on port 8000 before launching the UI.
+
 ## Endpoints
 
 | Method | Path | Description |
@@ -95,10 +107,7 @@ API is now live at `http://localhost:8000`. Interactive docs at `http://localhos
 
 ### Ingest a PDF
 
-```bash
-curl -X POST http://localhost:8000/ingest \
-  -F "files=@document.pdf"
-```
+Upload one or more PDFs via the UI at `http://localhost:8501` or the interactive API docs at `http://localhost:8000/docs`.
 
 Response:
 ```json
@@ -112,11 +121,7 @@ Re-ingesting the same file is a no-op (detected by source filename):
 
 ### Query
 
-```bash
-curl -X POST http://localhost:8000/query \
-  -H "Content-Type: application/json" \
-  -d '{"query": "What are the main findings?", "top_k": 5}'
-```
+Ask questions via the UI at `http://localhost:8501` or the interactive API docs at `http://localhost:8000/docs`.
 
 Response:
 ```json
