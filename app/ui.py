@@ -327,11 +327,11 @@ with st.sidebar:
         st.markdown("<br>", unsafe_allow_html=True)
 
     #Settings
-    st.markdown('<div class="section-label">Retrieval Settings</div>', unsafe_allow_html=True)
-    top_k = st.slider("Top-K chunks", min_value=1, max_value=15, value=5,
-                      help="How many chunks to retrieve before reranking")
+    # st.markdown('<div class="section-label">Retrieval Settings</div>', unsafe_allow_html=True)
+    # top_k = st.slider("Top-K chunks", min_value=1, max_value=15, value=5,
+    #                   help="How many chunks to retrieve before reranking")
 
-    st.markdown('<hr class="thin-divider">', unsafe_allow_html=True)
+    # st.markdown('<hr class="thin-divider">', unsafe_allow_html=True)
 
     # Query history
     if st.session_state.query_history:
@@ -362,7 +362,10 @@ with col1:
 
     ask_col, clear_col = st.columns([3, 1])
     with ask_col:
-        ask_clicked = st.button("Ask", disabled=not api_ok or not query.strip())
+        no_docs = len(st.session_state.ingested_docs) == 0
+        ask_clicked = st.button("Ask", disabled=not api_ok or not query.strip() or no_docs)
+        if no_docs:
+            st.caption("⬅ Upload and ingest a PDF first.")
     with clear_col:
         if st.button("Clear"):
             st.session_state.last_result = None
@@ -371,7 +374,7 @@ with col1:
     # ── answer ──
     if ask_clicked and query.strip():
         with st.spinner("Searching and generating answer..."):
-            result, error = query_api(query.strip(), top_k)
+            result, error = query_api(query.strip(), 5)
 
         if error:
             st.error(error)
